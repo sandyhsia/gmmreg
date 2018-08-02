@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
 
-import ConfigParser
+import configparser
 import time
 from math import cos,sin,log,exp,sqrt
 from numpy import loadtxt,arange,array,dot,delete,reshape,kron,eye,ones,zeros,trace,s_,r_,c_,squeeze
@@ -82,7 +82,8 @@ def transform_points(param, basis):
     Perform the thin-plate spline transform.
     """
     (nL,n) = basis.shape
-    d = param.shape[0]/n
+    d = int(param.shape[0]/n)
+    print("nL, n, d", nL, n, d)
     affine_param = param[0:d*(d+1)].reshape(d+1,d)
     tps_param = param[d*(d+1):d*n].reshape(n-d-1,d)
     after_tps = dot(basis,r_[affine_param,tps_param])
@@ -215,7 +216,7 @@ def run_ini(f_config):
     section_common = 'FILES'
     section_option = 'GMMREG_OPT'
 
-    c = ConfigParser.ConfigParser()
+    c = configparser.ConfigParser()
     c.read(f_config)
     model_file = c.get(section_common,'model')
     scene_file = c.get(section_common,'scene')
@@ -248,7 +249,7 @@ def run_ini(f_config):
         scene = denormalize(scene,c_s,s_s)
         after_tps = denormalize(after_tps,c_s,s_s)
     t2 = time.time()
-    print "Elasped time is %s seconds"%(t2-t1)
+    print ("Elasped time is %s seconds"%(t2-t1))
     #_plotting.displayABC(model,scene,after_tps)
     #_plotting.display2Dpointsets(after_tps,scene)
     return model,scene,after_tps

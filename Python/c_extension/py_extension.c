@@ -184,10 +184,26 @@ static PyMethodDef pyMethods[] = {
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
-PyMODINIT_FUNC
+/*PyMODINIT_FUNC
 init_extension(void)
 {
     (void) Py_InitModule("_extension", pyMethods);
     import_array();
+}*/
+
+
+static struct PyModuleDef _extension =
+{
+    PyModuleDef_HEAD_INIT,
+    "_extension", /* name of module */
+    "",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    pyMethods
+};
+
+PyMODINIT_FUNC PyInit__extension(void)
+{   
+    import_array();
+    return PyModule_Create(&_extension);
 }
 
